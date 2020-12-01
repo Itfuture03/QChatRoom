@@ -39,6 +39,12 @@
     <ClInclude Include="CNet.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MySocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QClient.cpp">
@@ -54,6 +60,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CNet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MySocket.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,9 +87,6 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="D:\桌面\下载.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="res\bitmap1.bmp">
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\LoginBack.bmp">
@@ -105,6 +114,24 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\头像 (6).ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ClientBack.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="D:\桌面\logbgtext.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\logbg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\qq.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bg.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bg1.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

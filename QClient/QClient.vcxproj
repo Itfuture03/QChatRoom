@@ -93,6 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -183,9 +184,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ChatDlg.h" />
     <ClInclude Include="CNet.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LogDLG.h" />
+    <ClInclude Include="MySocket.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="QClient.h" />
     <ClInclude Include="QClientDlg.h" />
@@ -193,8 +196,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChatDlg.cpp" />
     <ClCompile Include="CNet.cpp" />
     <ClCompile Include="LogDLG.cpp" />
+    <ClCompile Include="MySocket.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -215,13 +220,18 @@
     <None Include="res\QClient.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="D:\桌面\logbgtext.bmp" />
     <Image Include="D:\桌面\下载.jpg" />
-    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bg.bmp" />
+    <Image Include="res\bg1.bmp" />
     <Image Include="res\ButtonDown.bmp" />
     <Image Include="res\ButtonUp.bmp" />
+    <Image Include="res\ClientBack.bmp" />
     <Image Include="res\icon1.ico" />
+    <Image Include="res\logbg.bmp" />
     <Image Include="res\LoginBack.bmp" />
     <Image Include="res\QClient.ico" />
+    <Image Include="res\qq.ico" />
     <Image Include="res\头像 (1).ico" />
     <Image Include="res\头像 (2).ico" />
     <Image Include="res\头像 (3).ico" />

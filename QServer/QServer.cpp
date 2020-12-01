@@ -1,53 +1,42 @@
 ﻿
-// QClient.cpp: 定义应用程序的类行为。
+// QServer.cpp: 定义应用程序的类行为。
 //
 
 #include "pch.h"
 #include "framework.h"
-#include "QClient.h"
-#include "QClientDlg.h"
+#include "QServer.h"
+#include "QServerDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-#include "LogDLG.h"
 
 
-// CQClientApp
+// CQServerApp
 
-BEGIN_MESSAGE_MAP(CQClientApp, CWinApp)
+BEGIN_MESSAGE_MAP(CQServerApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
-// CQClientApp 构造
+// CQServerApp 构造
 
-CQClientApp::CQClientApp()
+CQServerApp::CQServerApp()
 {
 	// TODO: 在此处添加构造代码，
 	// 将所有重要的初始化放置在 InitInstance 中
 }
 
 
-// 唯一的 CQClientApp 对象
+// 唯一的 CQServerApp 对象
 
-CQClientApp theApp;
+CQServerApp theApp;
 
 
-// CQClientApp 初始化
+// CQServerApp 初始化
 
-BOOL CQClientApp::InitInstance()
+BOOL CQServerApp::InitInstance()
 {
-	// 如果一个运行在 Windows XP 上的应用程序清单指定要
-	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
-	//则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// 将它设置为包括所有要在应用程序中使用的
-	// 公共控件类。
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
-
 	CWinApp::InitInstance();
 
 	if (!AfxSocketInit())
@@ -75,7 +64,7 @@ BOOL CQClientApp::InitInstance()
 	// 例如修改为公司或组织名
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
-	CQClientDlg dlg;
+	CQServerDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
@@ -99,10 +88,6 @@ BOOL CQClientApp::InitInstance()
 	{
 		delete pShellManager;
 	}
-
-//#if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
-//	ControlBarCleanUp();
-//#endif
 
 	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
 	//  而不是启动应用程序的消息泵。

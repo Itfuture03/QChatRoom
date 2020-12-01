@@ -54,6 +54,13 @@ HBRUSH CLogDLG::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	{
 		return m_brBg;
 	}
+	//设置Static文本控件背景透明
+	if (pWnd->GetDlgCtrlID() == IDC_STATIC1|| pWnd->GetDlgCtrlID() == IDC_STATIC2|| pWnd->GetDlgCtrlID() == IDC_STATIC3)     //IDC_DEVICE_STAT为Static控件的ID
+	{
+		pDC->SetTextColor(RGB(0,0,0));    //设置控件字体颜色
+		pDC->SetBkMode(TRANSPARENT);   //设置透明属性
+		return (HBRUSH)GetStockObject(NULL_BRUSH);   //返回空画刷
+	}
 	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
 	return hbr;
 }
@@ -67,7 +74,7 @@ BOOL CLogDLG::OnInitDialog()
 	//设置静态文字的大小
 	//设置Static字体  
 	CFont m_Font;
-	m_Font.CreatePointFont(600, "Arial", NULL);
+	m_Font.CreatePointFont(800, "Arial", NULL);
 	m_static1.SetFont(&m_Font, true);
 	m_static1.SetWindowText("IP:");
 	m_static2.SetFont(&m_Font, true);
@@ -78,7 +85,7 @@ BOOL CLogDLG::OnInitDialog()
 	//设置对话框背景
 	m_bmBg.DeleteObject();
 	m_brBg.DeleteObject();
-	m_bmBg.LoadBitmap(IDB_logbgtext);
+	m_bmBg.LoadBitmap(IDB_logbg);
 	m_brBg.CreatePatternBrush(&m_bmBg);
 	m_Ip.SetWindowText("127.0.0.1");
 	m_loginBtn.LoadBitmaps(IDB_normalLogBtn, IDB_pushedLogBtn);
@@ -127,6 +134,4 @@ void CLogDLG::OnBnClickedLogbtn()
 	m_imgNum = m_btmSelect.GetCurSel();            //取得组合框中当前选中的项的下标
 	m_Ip.GetWindowText(m_ipAddr, 16);
 	OnOK();//关闭对话框
-	CQClientDlg QCL;
-	QCL.DoModal();
 }

@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CClientDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_MESSAGE(SOCKET_EVENT, OnSocket)
+
 	ON_BN_CLICKED(IDC_SendBtn, &CClientDlg::OnBnClickedSendbtn)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, &CClientDlg::OnNMDblclkList1)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST1, &CClientDlg::OnLvnItemchangedList1)

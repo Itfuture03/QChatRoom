@@ -5,13 +5,13 @@
 //枚举消息类型
 enum { ACCEPT = 0, SEND = 1, RETURN = 2, CLOSE = 3 };
 
-class CMySocket : public CSocket  
+class CMySocket : public CSocket
 {
 public:
 	CMySocket();
 	~CMySocket();
-	void AttachCWnd(CWnd *pWnd);//将Socket与操作窗体绑定--socket中保存了窗口的指针
-	CWnd *pWnd;//保存关联窗口
+	void AttachCWnd(CWnd* pWnd);//将Socket与操作窗体绑定--socket中保存了窗口的指针
+	CWnd* pWnd;//保存关联窗口
 	ULONG	m_Total;//保存消息发送条数
 	CString m_Player;//保存用户名
 	//重载CSocket类的三个函数
