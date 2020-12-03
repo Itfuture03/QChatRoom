@@ -115,6 +115,15 @@ BOOL CQClientDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	//连接数据库
+	if (!ConnectDB())
+	{
+		AfxMessageBox(TEXT("连接数据库失败"));
+		return FALSE;
+	}
+	//查询数据
+	SelectDB();
+
 tryagain:
 	//先弹出登录对话框
 	CLogDLG ld;
@@ -124,15 +133,29 @@ tryagain:
 		return TRUE;
 	}
 	//输入信息校验
-	if (strlen(ld.m_ipAddr) == 0) {
-		MessageBox(_T("请输入IP地址！"));
-		goto tryagain;
-	}
 
 	if (ld.m_username.IsEmpty()) {
 		MessageBox(_T("请输入用户名！"));
 		goto tryagain;
 	}
+	if (ld.m_password.IsEmpty()) {
+		MessageBox(_T("请输入密码！"));
+		goto tryagain;
+	}
+
+	for (int i = 0; i < count; i++) {
+		if (ld.m_password == m_data[i][2] && ld.m_username == m_data[i][1]) {
+			goto login;
+		}
+		else if (ld.m_password == m_data[i][2] && ld.m_username == m_data[i][0]) {
+			goto login;
+		}
+		else;
+	}
+	MessageBox(_T("用户名或者密码错误！"));
+	goto tryagain;
+	
+login:
 
 	m_username = ld.m_username;
 	char im = ld.m_imgNum + 1;
@@ -192,7 +215,7 @@ tryagain:
 	//设置对话框背景
 	m_bmBg.DeleteObject();
 	m_brBg.DeleteObject();
-	m_bmBg.LoadBitmap(IDB_bg1);
+	m_bmBg.LoadBitmap(IDB_mainbg);
 	m_brBg.CreatePatternBrush(&m_bmBg);
 	//载入图标头像
 	HICON myIcon[6];
@@ -230,6 +253,59 @@ void CQClientDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	{
 		CDialogEx::OnSysCommand(nID, lParam);
 	}
+}
+
+//连接MYSQL数据库
+BOOL CQClientDlg::ConnectDB()
+{
+	//初始化数据库
+	mysql_init(&m_mysql);
+	//设置数据库编码格式
+	mysql_options(&m_mysql, MYSQL_SET_CHARSET_NAME, "gbk");
+	//连接数据库
+	if (!mysql_real_connect(&m_mysql, host, user, pass, dbname, port, NULL, 0))
+		return FALSE;
+	return TRUE;
+}
+void CQClientDlg::FreeConnect() {
+	mysql_free_result(m_res);
+	mysql_close(&m_mysql);
+}
+//查询获取数据
+BOOL CQClientDlg::SelectDB()
+{
+	UpdateData(TRUE);
+
+	char query[150];
+
+	  //将数据格式化输出到字符串
+	sprintf(query, "select * from Client");
+	//设置编码格式
+	mysql_query(&m_mysql, "set names gbk");
+
+	if (mysql_query(&m_mysql, query)) {
+		printf("Query failed (%s)\n", mysql_error(&m_mysql));
+		return false;
+	}
+	else {
+		printf("query success\n");
+	}
+	m_res = mysql_store_result(&m_mysql);
+	if (!m_res) {
+		printf("Couldn't get result from %s\n", mysql_error(&m_mysql));
+		return false;
+	}
+	printf("number of dataline returned: %d\n", mysql_affected_rows(&m_mysql));
+
+	int row = 0;
+	//获取结果
+	while (m_row = mysql_fetch_row(m_res)) {
+		count++;
+		m_data[row][0] = m_row[0];
+		m_data[row][1] = m_row[1];
+		m_data[row++][2] = m_row[2];
+	}
+	return TRUE;
 }
 
 // 如果向对话框添加最小化按钮，则需要下面的代码
@@ -398,6 +474,8 @@ void CQClientDlg::OnNMDblclkList1(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	// TODO: 在此添加控件通知处理程序代码
+	m_curIndex = m_list.GetNextItem(-1, LVNI_SELECTED);
+	m_chatOneByOne =((CButton*)GetDlgItem(IDC_CHECKPerson))->GetCheck();//获取复选框状态
 	if (m_chatOneByOne) {
 		ChatDlg cdl;
 		cdl.DoModal();

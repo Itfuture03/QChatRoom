@@ -25,7 +25,6 @@ protected:
 public:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	virtual BOOL OnInitDialog();
-	void OnBnClickedSendbtn();
 	CString m_time;
 	CString m_showMsg;
 	CString m_sendMsg;
@@ -43,4 +42,5 @@ public:
 	CBitmap m_bmBg;
 	CBrush  m_brBg;
 	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
+	afx_msg void OnBnClickedSendbtn();
 };

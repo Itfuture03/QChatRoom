@@ -31,9 +31,7 @@ void ChatDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_Time, m_time);
-	//  DDX_Control(pDX, IDC_LISTChat, *m_chatlist);
 	DDX_Text(pDX, IDC_EDITSendMesg, m_sendMsg);
-	//  DDX_Text(pDX, IDC_EDITShowMesg, showMsg);
 	DDX_Text(pDX, IDC_EDITShowMesg, m_showMsg);
 	DDX_Control(pDX, IDC_LISTChat, m_chatlist);
 }
@@ -41,8 +39,9 @@ void ChatDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(ChatDlg, CDialog)
 	ON_WM_TIMER()
-	/*ON_MESSAGE(SOCKET_EVENT, OnSocket)*/
+	ON_MESSAGE(SOCKET_EVENT, OnSocket)
 	ON_WM_CTLCOLOR()
+	ON_BN_CLICKED(IDC_SendBtn, &ChatDlg::OnBnClickedSendbtn)
 END_MESSAGE_MAP()
 
 
@@ -55,25 +54,28 @@ BOOL ChatDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	//把SOCKET与对话框联系起来，SOCKET有消息就通知本对话框
+	dlg->m_socket.AttachCWnd(this);
 	CString strTime;
 	CTime tm;
 	tm = CTime::GetCurrentTime();         //获取当前系统时间
-	strTime = tm.Format("%y年%m月%d日 %X");   //格式化系统时间。即使系统时 间按照Format中设置的格式显示
+	strTime = tm.Format("%Y-%m-%d %H:%M:%S");   //格式化系统时间。即使系统时 间按照Format中设置的格式显示
 	SetDlgItemText(IDC_Time, strTime);        //初始化编辑框显示
+	Invalidate(false);
 	SetTimer(1, 1000, NULL);         //启动定时器
 
 	//设置对话框背景
 	m_bmBg.DeleteObject();
 	m_brBg.DeleteObject();
-	m_bmBg.LoadBitmap(IDB_bg1);
+	m_bmBg.LoadBitmap(IDB_bg2);
 	m_brBg.CreatePatternBrush(&m_bmBg);
 
 	if (dlg->m_chatOneByOne) {
 		
-		m_chatlist.InsertColumn(0, "聊天对象", LVCFMT_CENTER, 116, 0);
+		m_chatlist.InsertColumn(0, "     聊天对象", LVCFMT_CENTER, 116, 0);
 	}
-	else {
-		m_chatlist.InsertColumn(0, "在线用户", LVCFMT_CENTER, 116, 0);
+	else {	
+		m_chatlist.InsertColumn(0, "     在线用户", LVCFMT_CENTER, 116, 0);
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -99,81 +101,87 @@ HBRUSH ChatDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return hbr;
 }
 
-////Socket消息响应函数
-//LRESULT CQClientDlg::OnSocket(WPARAM wParam, LPARAM lParam)
-//{
-//	char	pkt[4096];
-//	memset(pkt, 0, 4096);
-//
-//	LVFINDINFO   info;
-//	LVITEM lvitem;
-//
-//	switch (lParam)
-//	{
-//	case RETURN:
-//		m_socket.Receive(pkt, 4096);
-//
-//		switch (pkt[0])
-//		{
-//		case 0x11:
-//			//连接信息
-//			pName[curNum] = pkt + 2;
-//			curNum++;
-//			m_showMsg += pkt + 2;
-//			m_showMsg += " 进入聊室。\r\n";
-//
-//			lvitem.mask = LVIF_IMAGE | LVIF_TEXT;
-//			lvitem.iItem = curNum;
-//			lvitem.pszText = pkt + 2;
-//			lvitem.iImage = pkt[1] - 1;
-//			lvitem.iSubItem = 0;
-//
-//			m_list.InsertItem(&lvitem);
-//
-//			break;
-//			//已加入用户信息
-//		case 0x31:
-//			pName[curNum] = pkt + 2;
-//			curNum++;
-//
-//			lvitem.mask = LVIF_IMAGE | LVIF_TEXT;
-//			lvitem.iItem = curNum;
-//			lvitem.pszText = pkt + 2;
-//			lvitem.iImage = pkt[1] - 0x31;
-//			lvitem.iSubItem = 0;
-//
-//			m_list.InsertItem(&lvitem);
-//			break;
-//			//退出
-//		case 0x41:
-//			//pkt + 1保存的是用户名
-//			m_showMsg += pkt + 1;
-//			m_showMsg += " 退出聊室\r\n";
-//
-//			info.flags = LVFI_PARTIAL | LVFI_STRING;
-//			info.psz = pkt + 1;
-//			int item;
-//			item = m_list.FindItem(&info);
-//
-//			if (item != -1)
-//			{
-//				m_list.DeleteItem(item);
-//			}
-//			break;
-//		default:
-//			//对于没有任何命令的消息，直接显示在消息框中
-//			m_showMsg += pkt + 1;
-//		}
-//
-//		UpdateData(false);
-//		break;
-//
-//	case CLOSE:
-//		MessageBox("服务器已关闭!");
-//		break;
-//	}
-//	return 1;
-//}
+//Socket消息响应函数
+LRESULT ChatDlg::OnSocket(WPARAM wParam, LPARAM lParam)
+{
+	//if (dlg->m_chatOneByOne) {
+	//	return 1;
+	//}
+	//else {
+		char	pkt[4096];
+		memset(pkt, 0, 4096);
+
+		LVFINDINFO   info;
+		LVITEM lvitem;
+
+		switch (lParam)
+		{
+		case RETURN:
+			dlg->m_socket.Receive(pkt, 4096);
+
+			switch (pkt[0])
+			{
+			case 0x11:
+				//连接信息
+				dlg->pName[dlg->curNum] = pkt + 2;
+				dlg->curNum++;
+				m_showMsg += pkt + 2;
+				m_showMsg += " 进入聊室。\r\n";
+
+				lvitem.mask = LVIF_IMAGE | LVIF_TEXT;
+				lvitem.iItem = dlg->curNum;
+				lvitem.pszText = pkt + 2;
+				lvitem.iImage = pkt[1] - 1;
+				lvitem.iSubItem = 0;
+
+				m_chatlist.InsertItem(&lvitem);
+
+				break;
+				//已加入用户信息
+			case 0x31:
+				dlg->pName[dlg->curNum] = pkt + 2;
+				dlg->curNum++;
+
+				lvitem.mask = LVIF_IMAGE | LVIF_TEXT;
+				lvitem.iItem = dlg->curNum;
+				lvitem.pszText = pkt + 2;
+				lvitem.iImage = pkt[1] - 0x31;
+				lvitem.iSubItem = 0;
+
+				m_chatlist.InsertItem(&lvitem);
+				break;
+				//退出
+			case 0x41:
+				//pkt + 1保存的是用户名
+				m_showMsg += pkt + 1;
+				m_showMsg += " 退出聊室\r\n";
+
+				info.flags = LVFI_PARTIAL | LVFI_STRING;
+				info.psz = pkt + 1;
+				int item;
+				item = m_chatlist.FindItem(&info);
+
+				if (item != -1)
+				{
+					m_chatlist.DeleteItem(item);
+				}
+				break;
+			default:
+				//对于没有任何命令的消息，直接显示在消息框中
+				m_showMsg += pkt + 1;
+			}
+
+			UpdateData(false);
+			break;
+
+		case CLOSE:
+			MessageBox("服务器已关闭!");
+			break;
+		}
+	
+	return 1;
+}
+
 
 
 void ChatDlg::OnBnClickedSendbtn()
@@ -183,7 +191,6 @@ void ChatDlg::OnBnClickedSendbtn()
 
 	char pkt[4096];
 	memset(pkt, 0, sizeof(pkt));
-
 	int			len;
 	if (dlg->m_chatOneByOne)
 	{
@@ -193,7 +200,7 @@ void ChatDlg::OnBnClickedSendbtn()
 		len = sprintf(pkt + 100, "私聊：%s：%s\r\n", dlg->m_username, m_sendMsg);
 		dlg->m_socket.Send(pkt, len + 100);
 
-		sprintf(pkt + 100, "私聊：对%s说：%s\r\n", dlg->pName[dlg->m_curIndex], dlg->m_sendMsg);
+		sprintf(pkt + 100, "私聊：对%s说：%s\r\n", dlg->pName[dlg->m_curIndex], m_sendMsg);
 		m_showMsg += pkt + 100;
 		m_sendMsg.Empty();
 	}
@@ -209,6 +216,8 @@ void ChatDlg::OnBnClickedSendbtn()
 	UpdateData(FALSE);
 }
 
+
+
 //系统时间显示
 void ChatDlg::OnTimer(UINT_PTR nIDEvent)
 {
@@ -217,7 +226,10 @@ void ChatDlg::OnTimer(UINT_PTR nIDEvent)
 	CTime tm;
 	tm = CTime::GetCurrentTime();
 	strTime = tm.Format("%Y-%m-%d %H:%M:%S");
-	SetDlgItemText(IDC_Time, strTime);        //显示系统时间
+	GetDlgItem(IDC_Time)->ShowWindow(SW_HIDE);
+	GetDlgItem(IDC_Time)->SetWindowText(strTime);
+	GetDlgItem(IDC_Time)->ShowWindow(SW_SHOW);
+	Invalidate(false);
 	CDialog::OnTimer(nIDEvent);
 }
 

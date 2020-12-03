@@ -4,8 +4,7 @@
 
 #pragma once
 #include "MySocket.h"
-
-
+#include "mysql.h"
 // CQClientDlg 对话框
 class CQClientDlg : public CDialogEx
 {
@@ -36,11 +35,14 @@ protected:
 
 	LRESULT OnSocket(WPARAM wParam, LPARAM lParam);
 
-	void OnBnClickedSendbtn();
+
 	
 	
 	DECLARE_MESSAGE_MAP()
 public:
+	BOOL ConnectDB();
+	void FreeConnect();
+	BOOL SelectDB();
 	CButton net;
 	bool bigFlag = false;
 	afx_msg
@@ -64,6 +66,22 @@ public:
 	CImageList	m_imageList;//头像列表
 	int			m_curIndex;//头像索引
 	CString m_username;//好友名
+	
+	//CString str;//获取选中行的文本
+
+	//connectionparams 
+	char* host = "localhost";
+	char* user = "root";
+	char* pass = "mysql";//mysql服务器密码 
+	char* dbname = "db";
+	unsigned int port = 3306; //server port 
+
+	MYSQL m_mysql;
+	CString m_data[100][100];
+	MYSQL_RES* m_res;//结果集
+	MYSQL_ROW m_row;//数据的类型安全
+	int count = 0;//记录一共几行数据；
+	//LVITEM lvitem;
 	afx_msg void OnBnClickedChatworld();
 	afx_msg void OnBnClickedCheckperson();
 	afx_msg void OnLvnItemchangedListmain(NMHDR* pNMHDR, LRESULT* pResult);

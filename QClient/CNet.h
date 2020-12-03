@@ -22,4 +22,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+
+	virtual BOOL OnInitDialog();
+	CBitmap m_bmBg;
+	CBrush  m_brBg;
+	afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

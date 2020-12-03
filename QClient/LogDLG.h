@@ -27,7 +27,8 @@ public:
 	CIPAddressCtrl m_Ip;
 	// 用户名输入
 	CString m_username;
-
+//	CString m_password;
+//密码
 	afx_msg void OnCbnSelchangePiccombo();
 	// 登录按钮
 	CBitmapButton m_loginBtn;
@@ -45,4 +46,7 @@ public:
 	CStatic m_static1;
 	CStatic m_static2;
 	CStatic m_static3;
+	CString m_password;
+	afx_msg void OnBnClickedzhcbtn();
+	CStatic m_static4;
 };

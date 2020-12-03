@@ -5,6 +5,7 @@
 #include "LogDLG.h"
 #include "afxdialogex.h"
 #include "QClientDlg.h"
+#include "ZhCDlg.h"
 
 
 
@@ -15,6 +16,7 @@ IMPLEMENT_DYNAMIC(CLogDLG, CDialogEx)
 CLogDLG::CLogDLG(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_LOG_DIALOG, pParent)
 	, m_username(_T(""))
+	, m_password(_T(""))
 {
 
 }
@@ -33,12 +35,15 @@ void CLogDLG::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC1, m_static1);
 	DDX_Control(pDX, IDC_STATIC2, m_static2);
 	DDX_Control(pDX, IDC_STATIC3, m_static3);
+	DDX_Text(pDX, IDC_PasswordEdit, m_password);
+	DDX_Control(pDX, IDC_STATIC4, m_static4);
 }
 
 
 BEGIN_MESSAGE_MAP(CLogDLG, CDialogEx)
 	ON_WM_CTLCOLOR()
 	ON_BN_CLICKED(IDC_LogBtn, &CLogDLG::OnBnClickedLogbtn)
+	ON_BN_CLICKED(IDC_zhcBtn, &CLogDLG::OnBnClickedzhcbtn)
 END_MESSAGE_MAP()
 
 
@@ -55,7 +60,7 @@ HBRUSH CLogDLG::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		return m_brBg;
 	}
 	//设置Static文本控件背景透明
-	if (pWnd->GetDlgCtrlID() == IDC_STATIC1|| pWnd->GetDlgCtrlID() == IDC_STATIC2|| pWnd->GetDlgCtrlID() == IDC_STATIC3)     //IDC_DEVICE_STAT为Static控件的ID
+	if (pWnd->GetDlgCtrlID() == IDC_STATIC1|| pWnd->GetDlgCtrlID() == IDC_STATIC2|| pWnd->GetDlgCtrlID() == IDC_STATIC3|| pWnd->GetDlgCtrlID() == IDC_STATIC4)     //IDC_DEVICE_STAT为Static控件的ID
 	{
 		pDC->SetTextColor(RGB(0,0,0));    //设置控件字体颜色
 		pDC->SetBkMode(TRANSPARENT);   //设置透明属性
@@ -81,6 +86,8 @@ BOOL CLogDLG::OnInitDialog()
 	m_static2.SetWindowText("用户名:");
 	m_static3.SetFont(&m_Font, true);
 	m_static3.SetWindowText("头像:");
+	m_static4.SetFont(&m_Font, true);
+	m_static4.SetWindowText("密码:");
 	//m_static1
 	//设置对话框背景
 	m_bmBg.DeleteObject();
@@ -134,4 +141,14 @@ void CLogDLG::OnBnClickedLogbtn()
 	m_imgNum = m_btmSelect.GetCurSel();            //取得组合框中当前选中的项的下标
 	m_Ip.GetWindowText(m_ipAddr, 16);
 	OnOK();//关闭对话框
+}
+
+
+void CLogDLG::OnBnClickedzhcbtn()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	UpdateData(TRUE);
+	ZhCDlg zlg;
+	zlg.DoModal();
+
 }

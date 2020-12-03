@@ -45,6 +45,9 @@
     <ClInclude Include="ChatDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ZhCDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="QClient.cpp">
@@ -66,6 +69,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ChatDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ZhCDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,6 +138,18 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\bg1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bg2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\bmp00001.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\mainbg.bmp">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

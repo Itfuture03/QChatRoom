@@ -8,11 +8,9 @@ CMySocket::CMySocket()
 	m_msgTotal = 0;
 }
 
-
 CMySocket::~CMySocket()
 {
 }
-
 
 void CMySocket::OnClose(int nErrorCode)
 {
@@ -22,7 +20,6 @@ void CMySocket::OnClose(int nErrorCode)
 	}
 	CSocket::OnClose(nErrorCode);
 }
-
 
 void CMySocket::OnReceive(int nErrorCode)
 {
