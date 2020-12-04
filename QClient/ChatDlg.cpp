@@ -76,6 +76,7 @@ BOOL ChatDlg::OnInitDialog()
 	}
 	else {	
 		m_chatlist.InsertColumn(0, "     在线用户", LVCFMT_CENTER, 116, 0);
+
 	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -104,10 +105,7 @@ HBRUSH ChatDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 //Socket消息响应函数
 LRESULT ChatDlg::OnSocket(WPARAM wParam, LPARAM lParam)
 {
-	//if (dlg->m_chatOneByOne) {
-	//	return 1;
-	//}
-	//else {
+	
 		char	pkt[4096];
 		memset(pkt, 0, 4096);
 
@@ -197,6 +195,7 @@ void ChatDlg::OnBnClickedSendbtn()
 		//私聊信息
 		pkt[0] = 0x51;
 		strcpy(pkt + 1, dlg->pName[dlg->m_curIndex]);
+		m_chatlist.InsertItem(1, dlg->pName[dlg->m_curIndex]);
 		len = sprintf(pkt + 100, "私聊：%s：%s\r\n", dlg->m_username, m_sendMsg);
 		dlg->m_socket.Send(pkt, len + 100);
 

@@ -76,6 +76,11 @@ bool ZhCDlg::InsertData() {
 	CString query;
 	CString name, pass;
 	id = 2020001 + (int)rand()*900;
+
+	CString str1="注册成功，ID为";
+	CString str;
+	str.Format("%s:%d", str1,id);
+
 	GetDlgItem(IDC_UserNameEdit1)->GetWindowTextA(name);
 	GetDlgItem(IDC_PasswordEdit1)->GetWindowTextA(pass);
 	query.Format(TEXT("insert into Client values(%d,'%s','%s');"), id,name , pass);
@@ -85,7 +90,7 @@ bool ZhCDlg::InsertData() {
 		AfxMessageBox(TEXT("插入数据失败!重试！"));
 		return FALSE;
 	}
-	Sleep(20);
-	AfxMessageBox(TEXT("注册成功，ID为"+id));
+	AfxMessageBox(str);
+	CDialog::OnOK();
 	return TRUE;
 }

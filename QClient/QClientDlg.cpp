@@ -34,6 +34,8 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedOk();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -46,6 +48,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CAboutDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -179,8 +182,8 @@ login:
 
 	//连接到服务器计算机，端口为0x8123的程序
 	if (m_socket.Connect((LPCTSTR)ld.m_ipAddr, 0x8123) == FALSE)
-	{
-		//如果连接成功，对方创建新的SOCKET，新的端口号，就与新的SOCKET，新的端口号通信。
+	{	//如果连接成功，对方创建新的SOCKET，新的端口号，就与新的SOCKET，新的端口号通信。
+		
 		err = GetLastError();
 		msg.Format(_T("连接服务器失败! \r\n错误代码:%d"), err);
 
@@ -232,7 +235,7 @@ login:
 		m_imageList.Add(myIcon[i]);
 	}
 
-	m_list.InsertColumn(0, "		好友列表", LVCFMT_CENTER, 270, 0);
+	m_list.InsertColumn(0, "		    好友列表", LVCFMT_LEFT, 270, 0);
 
 	m_list.SetImageList(&m_imageList, LVSIL_SMALL);//以小图显示
 	
@@ -284,7 +287,7 @@ BOOL CQClientDlg::SelectDB()
 	mysql_query(&m_mysql, "set names gbk");
 
 	if (mysql_query(&m_mysql, query)) {
-		printf("Query failed (%s)\n", mysql_error(&m_mysql));
+	/*	printf("Query failed (%s)\n", mysql_error(&m_mysql));*/
 		return false;
 	}
 	else {
@@ -292,7 +295,7 @@ BOOL CQClientDlg::SelectDB()
 	}
 	m_res = mysql_store_result(&m_mysql);
 	if (!m_res) {
-		printf("Couldn't get result from %s\n", mysql_error(&m_mysql));
+	/*	printf("Couldn't get result from %s\n", mysql_error(&m_mysql));*/
 		return false;
 	}
 	printf("number of dataline returned: %d\n", mysql_affected_rows(&m_mysql));
@@ -517,3 +520,10 @@ void CQClientDlg::OnBnClickedNet()
 	cn.DoModal();
 }
 
+
+
+void CAboutDlg::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogEx::OnOK();
+}
