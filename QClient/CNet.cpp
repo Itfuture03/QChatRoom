@@ -30,6 +30,7 @@ void CNet::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CNet, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CNet::OnBnClickedOk)
+	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -51,4 +52,33 @@ void CNet::OnBnClickedOk()
 	{
 		ShellExecute(0,NULL, _T("https://cn.bing.com/search?q=")+netadd, NULL, NULL, SW_NORMAL);
 	}
+}
+
+
+BOOL CNet::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  在此添加额外的初始化
+	//设置对话框背景
+	m_bmBg.DeleteObject();
+	m_brBg.DeleteObject();
+	m_bmBg.LoadBitmap(IDB_soubg);
+	m_brBg.CreatePatternBrush(&m_bmBg);
+	return TRUE;  // return TRUE unless you set the focus to a control
+				  // 异常: OCX 属性页应返回 FALSE
+}
+
+
+HBRUSH CNet::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  在此更改 DC 的任何特性
+	if (nCtlColor == CTLCOLOR_DLG)
+	{
+		return m_brBg;
+	}
+	// TODO:  如果默认的不是所需画笔，则返回另一个画笔
+	return hbr;
 }
